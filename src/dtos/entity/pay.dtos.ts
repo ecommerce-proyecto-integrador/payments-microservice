@@ -1,10 +1,9 @@
-import { Column, Entity} from "typeorm"
+import { Column, Entity, OneToMany} from "typeorm"
+import { History } from "./history.dtos"
 
 @Entity()
 export class Pay{
     @Column({ primary: true, generated: true })
-    id: number;
-    @Column()
     orden_compra: string;
     @Column()
     session_id: string;
@@ -12,5 +11,8 @@ export class Pay{
     monto: number;
     @Column()
     url_retorno: string;
-    
+    @Column()
+    correo: string;
+    @OneToMany(() => History, history => history.pay)
+    history?: History[]
 }

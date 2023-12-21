@@ -5,7 +5,7 @@ import { Transport, ClientsModule } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt'; // Asegúrate de importar JwtModule
 import { Pay } from './dtos/entity/pay.dtos';
-
+import { History } from './dtos/entity/history.dtos';
 
 @Module({
   imports: [
@@ -42,7 +42,7 @@ import { Pay } from './dtos/entity/pay.dtos';
       autoLoadEntities: true,
       synchronize: true,
     }),*/
-    TypeOrmModule.forFeature([Pay]),
+    TypeOrmModule.forFeature([Pay, History]),
     JwtModule.register({
       secret: 'tu_clave_secreta', // Reemplaza con tu clave secreta real
       signOptions: { expiresIn: '1h' }, // Opciones de firma del token

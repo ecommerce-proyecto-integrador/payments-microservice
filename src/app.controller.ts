@@ -22,5 +22,17 @@ export class AppController {
         console.error('Falta INFO.');
       }
     }
+
+  @EventPattern('commit_pay')
+    async handleCommitPay(data: { token:string }) {
+      const { token } = data;
+      
+      if (token) {
+        const resp = await this.appService.commitPay(data.token)
+        return resp;
+      } else {
+        console.error('Falta INFO.');
+      }
+    }
   
 }
