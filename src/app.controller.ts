@@ -12,11 +12,11 @@ export class AppController {
 
   
   @EventPattern('new_pay_created')
-    async handleUpdatePassUser(data: { orden_compra:string,session_id:number,monto: number,url_retorno:string,  correo: string }) {
-      const { orden_compra,session_id,monto,url_retorno, correo } = data;
+    async handleUpdatePassUser(data: { orden_compra:string,session_id:number,monto: number,url_retorno:string,  correo: string , cart: string[]}) {
+      const { orden_compra,session_id,monto,url_retorno, correo, cart } = data;
       
       if (monto  && correo) {
-        const resp = await this.appService.payCreated(data.orden_compra,data.session_id,data.monto,data.url_retorno,data.correo)
+        const resp = await this.appService.payCreated(data.orden_compra,data.session_id,data.monto,data.url_retorno,data.correo, data.cart)
         return resp;
       } else {
         console.error('Falta INFO.');

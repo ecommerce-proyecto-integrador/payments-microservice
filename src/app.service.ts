@@ -7,15 +7,17 @@ import { Repository } from 'typeorm';
 import * as Transbank from 'transbank-sdk';
 import { JwtService } from '@nestjs/jwt';
 import { Pay } from './dtos/entity/pay.dtos';
+import { History } from './dtos/entity/history.dtos';
 import axios from 'axios';
 
 
 @Injectable()
 export class AppService {
   constructor(@Inject('PAY_SERVICE') private client: ClientProxy,
-  @InjectRepository(Pay) private readonly payRepository: Repository<Pay>,private readonly jwtService: JwtService, ){}
+  @InjectRepository(Pay) private readonly payRepository: Repository<Pay>,private readonly jwtService: JwtService,
+  @InjectRepository(History) private readonly historyRepository: Repository<History>, ){}
 
-  async payCreated(orden_compra:string,session_id:number,monto:number,url_retorno:string,correo: string): Promise<string> {
+  async payCreated(orden_compra:string,session_id:number,monto:number,url_retorno:string,correo: string, cart:string[]): Promise<string> {
     try {
       const apiKeyId = '597055555532';
       const apiKeySecret = '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C';
@@ -49,7 +51,18 @@ export class AppService {
       pay.correo = correo;
 
       await this.payRepository.save(pay);
-      console.log(pay)
+      
+      
+      
+      for (const productID of cart) {
+        const history = new History();
+        history.orden_compra = orden_compra
+        history.product_id = productID
+        history.pay = null
+
+        await this.historyRepository.save(history)
+  
+      }
 
       
       return transbankTokenResponse.data.url + '?token_ws=' + transbankTokenResponse.data.token
